@@ -15,6 +15,10 @@ pytest = "^8.3.3"
 pytest-cov = "^6.0.0"
 taskipy = "^1.14.0"
 
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.7.4"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
