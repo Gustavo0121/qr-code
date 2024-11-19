@@ -8,6 +8,7 @@ from application.view import pages
 
 routes = {
     '/notfound': pages.not_found_view,
+    '/': pages.main_view,
 }
 
 def view_pop(e: ft.ControlEvent) -> NoReturn:

@@ -25,6 +25,8 @@ def main(page: ft.Page) -> None:
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.theme_mode = ft.ThemeMode.DARK
+    page.window.height = 800
+    page.window.width = 1200
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
