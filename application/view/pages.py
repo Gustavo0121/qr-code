@@ -4,6 +4,7 @@ import logging
 
 import flet as ft
 import qrcode
+import cv2
 
 from pathlib import Path
 
@@ -89,8 +90,16 @@ class Main(ft.View):
         img = qr.make_image(fill='black', back_color='white')
         img.save(Path(__file__).parents[2].joinpath('teste.png').as_posix())
 
-
-
+    def read_qr(self, event: ft.ControlEvent, file: str):
+        """Read QRCode."""
+        logging.debug(event)
+        img = cv2.imread(file)
+        detector = cv2.QRCodeDetector()
+        conteudo, _, _ = detector.detectAndDecode(img)
+        if conteudo:
+            print(f"Conteúdo do QR Code: {conteudo}")
+        else:
+            print("QR Code não detectado.")
 
 def main_view(e: ft.ControlEvent) -> ft.Control:
     """Main view."""
@@ -114,3 +123,8 @@ def not_found_view(e: ft.ControlEvent) -> ft.Control:
             ),
         ],
     )
+
+
+if __name__ == '__main__':
+    main = Main(ft.ControlEvent)
+    main.read_qr(ft.ControlEvent, Path(__file__).parents[2].joinpath('teste.png').as_posix())
