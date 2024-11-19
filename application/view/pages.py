@@ -65,7 +65,7 @@ class Main(ft.View):
                 ),
                 ft.TextButton(
                     'Gerar',
-                    on_click=self.gen_qr,
+                    on_click=lambda e: self.gen_qr(e, self.dlg_modal.content.controls[0].content.value),
                 ),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
@@ -75,7 +75,7 @@ class Main(ft.View):
         )
         event.page.open(self.dlg_modal)
 
-    def gen_qr(self, event: ft.ControlEvent):
+    def gen_qr(self, event: ft.ControlEvent, msg: str):
         """Generate QRCode."""
         logging.debug(event)
         qr = qrcode.QRCode(
@@ -84,7 +84,7 @@ class Main(ft.View):
             box_size=10,
             border=4,
         )
-        qr.add_data('Gustavo lindo')
+        qr.add_data(msg)
         qr.make(fit=True)
         img = qr.make_image(fill='black', back_color='white')
         img.save(Path(__file__).parents[2].joinpath('teste.png').as_posix())
