@@ -1,36 +1,43 @@
 """Pages."""
 
 import logging
+from pathlib import Path
 
+import cv2
 import flet as ft
 import qrcode
-import cv2
 
-from pathlib import Path
 
 class Main(ft.View):
     """Main page."""
+
     def __init__(self, events: ft.ControlEvent, **kwargs: str):
         """Init it."""
         super().__init__()
         self.events = events
         self.route: str | None = kwargs.get('route')
-        self.bgcolor='#074166'
-        self.horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        self.bgcolor = '#074166'
+        self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.dlg_modal = ft.AlertDialog()
-        self.controls=[
+        self.controls = [
             ft.Container(
                 content=ft.Column(
                     controls=[
                         ft.TextButton(
                             'Gerar QRCode',
-                            style=ft.ButtonStyle(bgcolor='#0E8BDB', shape=ft.RoundedRectangleBorder(radius=5)),
+                            style=ft.ButtonStyle(
+                                bgcolor='#0E8BDB',
+                                shape=ft.RoundedRectangleBorder(radius=5),
+                            ),
                             on_click=self.dlgmodal,
                         ),
                         ft.TextButton(
                             'Ler QRCode',
-                            style=ft.ButtonStyle(bgcolor='#0E8BDB', shape=ft.RoundedRectangleBorder(radius=5)),
+                            style=ft.ButtonStyle(
+                                bgcolor='#0E8BDB',
+                                shape=ft.RoundedRectangleBorder(radius=5),
+                            ),
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -40,7 +47,7 @@ class Main(ft.View):
                 bgcolor='#0A6199',
                 height=550,
                 width=400,
-                alignment = ft.alignment.center,
+                alignment=ft.alignment.center,
             ),
         ]
 
@@ -66,7 +73,10 @@ class Main(ft.View):
                 ),
                 ft.TextButton(
                     'Gerar',
-                    on_click=lambda e: self.gen_qr(e, self.dlg_modal.content.controls[0].content.value),
+                    on_click=lambda e: self.gen_qr(
+                        e,
+                        self.dlg_modal.content.controls[0].content.value,
+                    ),
                 ),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
@@ -76,7 +86,7 @@ class Main(ft.View):
         )
         event.page.open(self.dlg_modal)
 
-    def gen_qr(self, event: ft.ControlEvent, msg: str):
+    def gen_qr(self, event: ft.ControlEvent, msg: str) -> None:
         """Generate QRCode."""
         logging.debug(event)
         qr = qrcode.QRCode(
@@ -90,21 +100,23 @@ class Main(ft.View):
         img = qr.make_image(fill='black', back_color='white')
         img.save(Path(__file__).parents[2].joinpath('teste.png').as_posix())
 
-    def read_qr(self, event: ft.ControlEvent, file: str):
+    def read_qr(self, event: ft.ControlEvent, file: str) -> None:
         """Read QRCode."""
         logging.debug(event)
         img = cv2.imread(file)
         detector = cv2.QRCodeDetector()
         conteudo, _, _ = detector.detectAndDecode(img)
         if conteudo:
-            print(f"Conteúdo do QR Code: {conteudo}")
+            print(f'Conteúdo do QR Code: {conteudo}')  # noqa: T201
         else:
-            print("QR Code não detectado.")
+            print('QR Code não detectado.')  # noqa: T201
+
 
 def main_view(e: ft.ControlEvent) -> ft.Control:
     """Main view."""
     logging.debug(e)
     return Main(e, route='/')
+
 
 def not_found_view(e: ft.ControlEvent) -> ft.Control:
     """Notfount view."""
@@ -127,4 +139,7 @@ def not_found_view(e: ft.ControlEvent) -> ft.Control:
 
 if __name__ == '__main__':
     main = Main(ft.ControlEvent)
-    main.read_qr(ft.ControlEvent, Path(__file__).parents[2].joinpath('teste.png').as_posix())
+    main.read_qr(
+        ft.ControlEvent,
+        Path(__file__).parents[2].joinpath('teste.png').as_posix(),
+    )

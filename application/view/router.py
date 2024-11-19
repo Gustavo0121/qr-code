@@ -11,6 +11,7 @@ routes = {
     '/': pages.main_view,
 }
 
+
 def view_pop(e: ft.ControlEvent) -> NoReturn:
     """View pop."""
     logging.info(e)
