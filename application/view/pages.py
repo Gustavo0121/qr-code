@@ -3,10 +3,8 @@
 import logging
 from pathlib import Path
 
-import cv2
 import flet as ft
-import qrcode
-
+from application.controllers.actions import gen_qr, read_qr
 
 class Main(ft.View):
     """Main page."""
@@ -20,6 +18,10 @@ class Main(ft.View):
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.dlg_modal = ft.AlertDialog()
+        self.file_picker = ft.FilePicker(on_result=self.files_result)
+        self.events.page.overlay.append(self.file_picker)
+        self.conteudo = ''
+
         self.controls = [
             ft.Container(
                 content=ft.Column(
@@ -30,7 +32,7 @@ class Main(ft.View):
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
-                            on_click=self.dlgmodal,
+                            on_click=lambda e: self.dlgmodal(e, True),
                         ),
                         ft.TextButton(
                             'Ler QRCode',
@@ -38,6 +40,7 @@ class Main(ft.View):
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
+                            on_click=lambda _: self.file_picker.pick_files(),
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -51,7 +54,12 @@ class Main(ft.View):
             ),
         ]
 
-    def dlgmodal(self, event: ft.ControlEvent) -> None:
+    def files_result(self, event: ft.FilePickerResultEvent) -> None:
+        """Pick file result."""
+        self.conteudo = read_qr(event, event.files[0].path)
+        self.dlgmodal(event, False)
+
+    def dlgmodal(self, event: ft.ControlEvent, modal: bool) -> None:
         """Generate a QRCode."""
         self.dlg_modal = ft.AlertDialog(
             modal=True,
@@ -73,9 +81,10 @@ class Main(ft.View):
                 ),
                 ft.TextButton(
                     'Gerar',
-                    on_click=lambda e: self.gen_qr(
+                    on_click=lambda e: gen_qr(
                         e,
                         self.dlg_modal.content.controls[0].content.value,
+                        self.dlg_modal,
                     ),
                 ),
             ],
@@ -83,34 +92,11 @@ class Main(ft.View):
             on_dismiss=lambda e: e.page.add(
                 ft.Text('Modal dialog dismissed'),
             ),
-        )
+        ) if modal else ft.AlertDialog(
+            title=ft.Text('Conteúdo do QRCode'),
+            content=ft.Text(self.conteudo)
+            )
         event.page.open(self.dlg_modal)
-
-    def gen_qr(self, event: ft.ControlEvent, msg: str) -> None:
-        """Generate QRCode."""
-        logging.debug(event)
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(msg)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-        img.save(Path(__file__).parents[2].joinpath('teste.png').as_posix())
-
-    def read_qr(self, event: ft.ControlEvent, file: str) -> None:
-        """Read QRCode."""
-        logging.debug(event)
-        img = cv2.imread(file)
-        detector = cv2.QRCodeDetector()
-        conteudo, _, _ = detector.detectAndDecode(img)
-        if conteudo:
-            print(f'Conteúdo do QR Code: {conteudo}')  # noqa: T201
-        else:
-            print('QR Code não detectado.')  # noqa: T201
-
 
 def main_view(e: ft.ControlEvent) -> ft.Control:
     """Main view."""
@@ -138,8 +124,7 @@ def not_found_view(e: ft.ControlEvent) -> ft.Control:
 
 
 if __name__ == '__main__':
-    main = Main(ft.ControlEvent)
-    main.read_qr(
+    read_qr(
         ft.ControlEvent,
         Path(__file__).parents[2].joinpath('teste.png').as_posix(),
     )
