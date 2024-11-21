@@ -3,9 +3,9 @@
 import logging
 from pathlib import Path
 
-import cv2
 import flet as ft
-import qrcode
+from application.controllers.actions import gen_qr, read_qr
+from application.controllers.appbar import AppBar
 
 
 class Main(ft.View):
@@ -16,28 +16,50 @@ class Main(ft.View):
         super().__init__()
         self.events = events
         self.route: str | None = kwargs.get('route')
+        self.appbar = AppBar(self.events, 'QR Code')
         self.bgcolor = '#074166'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
-        self.dlg_modal = ft.AlertDialog()
+        self.dlg_modal = ft.AlertDialog
+        self.file_picker = ft.FilePicker(on_result=self.files_result)
+        self.events.page.overlay.append(self.file_picker)
+        self.conteudo = ''
+        self.spacing = 75
+
         self.controls = [
+            ft.Text(
+                'Read and Generate QR Codes',
+                theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                style=ft.TextStyle(
+                    shadow=ft.BoxShadow(
+                        blur_radius=3.0,
+                        color='#10A7E3',
+                        blur_style=ft.ShadowBlurStyle.OUTER,
+                        offset=ft.Offset(4, 3),
+                    ),
+                ),
+                size=40,
+                color='black',
+                weight=ft.FontWeight.BOLD,
+            ),
             ft.Container(
                 content=ft.Column(
                     controls=[
                         ft.TextButton(
-                            'Gerar QRCode',
+                            'Gerar QR Code',
                             style=ft.ButtonStyle(
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
-                            on_click=self.dlgmodal,
+                            on_click=lambda e: self.dlgmodal(e, modal=True),
                         ),
                         ft.TextButton(
-                            'Ler QRCode',
+                            'Ler QR Code',
                             style=ft.ButtonStyle(
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
+                            on_click=lambda _: self.file_picker.pick_files(),
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -45,71 +67,70 @@ class Main(ft.View):
                     height=200,
                 ),
                 bgcolor='#0A6199',
-                height=550,
-                width=400,
+                height=300,
+                width=250,
                 alignment=ft.alignment.center,
             ),
         ]
 
-    def dlgmodal(self, event: ft.ControlEvent) -> None:
-        """Generate a QRCode."""
-        self.dlg_modal = ft.AlertDialog(
-            modal=True,
-            title=ft.Text('Gerador de QRCode'),
-            content=ft.Column(
-                controls=[
-                    ft.Container(
-                        content=ft.TextField(
-                            label='Escreva a mensagem do QRCode',
+    def files_result(self, event: ft.FilePickerResultEvent) -> None:
+        """Pick file result."""
+        self.conteudo = read_qr(event, event.files[0].path)
+        self.dlgmodal(event, modal=False)
+
+    def dlgmodal(self, event: ft.ControlEvent, *, modal: bool) -> None:
+        """Generate a QR Code."""
+        self.dlg_modal = (
+            ft.AlertDialog(
+                bgcolor='#0A6199',
+                modal=True,
+                title=ft.Text(
+                    'Gerador de QR Code',
+                    color='black',
+                    weight=ft.FontWeight.BOLD,
+                ),
+                content=ft.Column(
+                    controls=[
+                        ft.TextField(
+                            label='Escreva a mensagem do QR Code',
+                            text_style=ft.TextStyle(
+                                color='black',
+                                weight=ft.FontWeight.W_500,
+                            ),
                         ),
-                        bgcolor='#0A6199',
+                    ],
+                ),
+                actions=[
+                    ft.TextButton(
+                        'Cancelar',
+                        on_click=lambda e: e.page.close(self.dlg_modal),
+                    ),
+                    ft.TextButton(
+                        'Gerar',
+                        on_click=lambda e: gen_qr(
+                            e,
+                            self.dlg_modal.content.controls[0].value,
+                            self.dlg_modal,
+                        ),
                     ),
                 ],
-            ),
-            actions=[
-                ft.TextButton(
-                    'Cancelar',
-                    on_click=lambda e: e.page.close(self.dlg_modal),
+                actions_alignment=ft.MainAxisAlignment.END,
+                on_dismiss=lambda e: e.page.add(
+                    ft.Text('Modal dialog dismissed'),
                 ),
-                ft.TextButton(
-                    'Gerar',
-                    on_click=lambda e: self.gen_qr(
-                        e,
-                        self.dlg_modal.content.controls[0].content.value,
-                    ),
+            )
+            if modal
+            else ft.AlertDialog(
+                title=ft.Text(
+                    'Conteúdo do QR Code',
+                    color='black',
+                    weight=ft.FontWeight.BOLD,
                 ),
-            ],
-            actions_alignment=ft.MainAxisAlignment.END,
-            on_dismiss=lambda e: e.page.add(
-                ft.Text('Modal dialog dismissed'),
-            ),
+                content=ft.Text(self.conteudo, color='black', size=20),
+                bgcolor='#0A6199',
+            )
         )
         event.page.open(self.dlg_modal)
-
-    def gen_qr(self, event: ft.ControlEvent, msg: str) -> None:
-        """Generate QRCode."""
-        logging.debug(event)
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(msg)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-        img.save(Path(__file__).parents[2].joinpath('teste.png').as_posix())
-
-    def read_qr(self, event: ft.ControlEvent, file: str) -> None:
-        """Read QRCode."""
-        logging.debug(event)
-        img = cv2.imread(file)
-        detector = cv2.QRCodeDetector()
-        conteudo, _, _ = detector.detectAndDecode(img)
-        if conteudo:
-            print(f'Conteúdo do QR Code: {conteudo}')  # noqa: T201
-        else:
-            print('QR Code não detectado.')  # noqa: T201
 
 
 def main_view(e: ft.ControlEvent) -> ft.Control:
@@ -138,8 +159,7 @@ def not_found_view(e: ft.ControlEvent) -> ft.Control:
 
 
 if __name__ == '__main__':
-    main = Main(ft.ControlEvent)
-    main.read_qr(
+    read_qr(
         ft.ControlEvent,
         Path(__file__).parents[2].joinpath('teste.png').as_posix(),
     )
