@@ -6,7 +6,6 @@ import logging
 import cv2
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-# from application import qrcodes
 
 qrcodes: list = []
 

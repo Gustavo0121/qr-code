@@ -28,6 +28,15 @@ class Main(ft.View):
         self.controls = [
             ft.Text(
                 'Read and Generate QR Codes',
+                theme_style=ft.TextThemeStyle.TITLE_LARGE,
+                style=ft.TextStyle(
+                    shadow=ft.BoxShadow(
+                        blur_radius=3.0,
+                        color='#10A7E3',
+                        blur_style=ft.ShadowBlurStyle.OUTER,
+                        offset=ft.Offset(4, 3),
+                    ),
+                ),
                 size=40,
                 color='black',
                 weight=ft.FontWeight.BOLD,
