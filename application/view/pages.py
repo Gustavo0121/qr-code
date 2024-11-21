@@ -15,7 +15,7 @@ class Main(ft.View):
         super().__init__()
         self.events = events
         self.route: str | None = kwargs.get('route')
-        self.appbar = AppBar(self.events, 'QRCode')
+        self.appbar = AppBar(self.events, 'QR Code')
         self.bgcolor = '#074166'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -23,13 +23,20 @@ class Main(ft.View):
         self.file_picker = ft.FilePicker(on_result=self.files_result)
         self.events.page.overlay.append(self.file_picker)
         self.conteudo = ''
+        self.spacing = 75
 
         self.controls = [
+            ft.Text(
+                'Read and Generate QR Codes',
+                size=40,
+                color='black',
+                weight=ft.FontWeight.BOLD,
+            ),
             ft.Container(
                 content=ft.Column(
                     controls=[
                         ft.TextButton(
-                            'Gerar QRCode',
+                            'Gerar QR Code',
                             style=ft.ButtonStyle(
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
@@ -37,7 +44,7 @@ class Main(ft.View):
                             on_click=lambda e: self.dlgmodal(e, True),
                         ),
                         ft.TextButton(
-                            'Ler QRCode',
+                            'Ler QR Code',
                             style=ft.ButtonStyle(
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
@@ -62,15 +69,15 @@ class Main(ft.View):
         self.dlgmodal(event, False)
 
     def dlgmodal(self, event: ft.ControlEvent, modal: bool) -> None:
-        """Generate a QRCode."""
+        """Generate a QR Code."""
         self.dlg_modal = ft.AlertDialog(
             modal=True,
-            title=ft.Text('Gerador de QRCode'),
+            title=ft.Text('Gerador de QR Code'),
             content=ft.Column(
                 controls=[
                     ft.Container(
                         content=ft.TextField(
-                            label='Escreva a mensagem do QRCode',
+                            label='Escreva a mensagem do QR Code',
                         ),
                         bgcolor='#0A6199',
                     ),
@@ -95,7 +102,7 @@ class Main(ft.View):
                 ft.Text('Modal dialog dismissed'),
             ),
         ) if modal else ft.AlertDialog(
-            title=ft.Text('Conteúdo do QRCode'),
+            title=ft.Text('Conteúdo do QR Code'),
             content=ft.Text(self.conteudo)
             )
         event.page.open(self.dlg_modal)

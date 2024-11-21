@@ -11,7 +11,7 @@ from tempfile import NamedTemporaryFile
 qrcodes: list = []
 
 def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
-    """Generate QRCode."""
+    """Generate QR Code."""
     logging.debug(event)
     qrcodes.append(Path(NamedTemporaryFile(suffix='.png').name))
     qr = qrcode.QRCode(
@@ -26,7 +26,7 @@ def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
     img.save(qrcodes[-1].as_posix())
     print(qrcodes)
     dlg_qr: ft.AlertDialog = ft.AlertDialog(
-        title=ft.Text('QRCode gerado'),
+        title=ft.Text('QR Code gerado'),
         content=ft.Column(
             controls=[
                 ft.Image(qrcodes[-1].as_posix()),
