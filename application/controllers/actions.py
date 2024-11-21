@@ -25,7 +25,8 @@ def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
     img.save(qrcodes[-1].as_posix())
     print(qrcodes)
     dlg_qr: ft.AlertDialog = ft.AlertDialog(
-        title=ft.Text('QR Code gerado'),
+        title=ft.Text('QR Code gerado', weight=ft.FontWeight.BOLD),
+        bgcolor='#074166',
         content=ft.Column(
             controls=[
                 ft.Image(qrcodes[-1].as_posix()),

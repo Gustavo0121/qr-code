@@ -80,15 +80,14 @@ class Main(ft.View):
     def dlgmodal(self, event: ft.ControlEvent, modal: bool) -> None:
         """Generate a QR Code."""
         self.dlg_modal = ft.AlertDialog(
+            bgcolor='#0A6199',
             modal=True,
-            title=ft.Text('Gerador de QR Code'),
+            title=ft.Text('Gerador de QR Code', color='black', weight=ft.FontWeight.BOLD),
             content=ft.Column(
                 controls=[
-                    ft.Container(
-                        content=ft.TextField(
-                            label='Escreva a mensagem do QR Code',
-                        ),
-                        bgcolor='#0A6199',
+                    ft.TextField(
+                        label='Escreva a mensagem do QR Code',
+                        text_style=ft.TextStyle(color='black', weight=ft.FontWeight.W_500)
                     ),
                 ],
             ),
@@ -101,7 +100,7 @@ class Main(ft.View):
                     'Gerar',
                     on_click=lambda e: gen_qr(
                         e,
-                        self.dlg_modal.content.controls[0].content.value,
+                        self.dlg_modal.content.controls[0].value,
                         self.dlg_modal,
                     ),
                 ),
@@ -111,8 +110,9 @@ class Main(ft.View):
                 ft.Text('Modal dialog dismissed'),
             ),
         ) if modal else ft.AlertDialog(
-            title=ft.Text('Conteúdo do QR Code'),
-            content=ft.Text(self.conteudo)
+            title=ft.Text('Conteúdo do QR Code', color='black', weight=ft.FontWeight.BOLD),
+            content=ft.Text(self.conteudo, color='black', size=20),
+            bgcolor='#0A6199',
             )
         event.page.open(self.dlg_modal)
 
