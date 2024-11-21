@@ -5,6 +5,7 @@ from pathlib import Path
 
 import flet as ft
 from application.controllers.actions import gen_qr, read_qr
+from application.controllers.appbar import AppBar
 
 class Main(ft.View):
     """Main page."""
@@ -14,6 +15,7 @@ class Main(ft.View):
         super().__init__()
         self.events = events
         self.route: str | None = kwargs.get('route')
+        self.appbar = AppBar(self.events, 'QRCode')
         self.bgcolor = '#074166'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
