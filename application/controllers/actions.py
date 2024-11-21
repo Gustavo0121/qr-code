@@ -1,18 +1,20 @@
 """Actions."""
 
-import flet as ft
-import qrcode
 import logging
-import cv2
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
+import cv2
+import flet as ft
+import qrcode
+
 qrcodes: list = []
+
 
 def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
     """Generate QR Code."""
     logging.debug(event)
-    qrcodes.append(Path(NamedTemporaryFile(suffix='.png').name))
+    qrcodes.append(Path(NamedTemporaryFile(suffix='.png').name))  # noqa: SIM115
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -23,7 +25,6 @@ def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
     img.save(qrcodes[-1].as_posix())
-    print(qrcodes)
     dlg_qr: ft.AlertDialog = ft.AlertDialog(
         title=ft.Text('QR Code gerado', weight=ft.FontWeight.BOLD),
         bgcolor='#074166',
@@ -48,7 +49,12 @@ def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control) -> None:
     event.page.open(dlg_qr)
     event.page.close(dlg)
 
-def download(event: ft.ControlEvent, img: qrcode.image.pure.PyPNGImage, dlg: ft.Control) -> None:
+
+def download(
+    event: ft.ControlEvent,
+    img: qrcode.image.pure.PyPNGImage,
+    dlg: ft.Control,
+) -> None:
     """Download image."""
     logging.debug(event)
     img.save(Path.home().joinpath('Downloads', 'teste.png').as_posix())
@@ -62,6 +68,3 @@ def read_qr(event: ft.ControlEvent, file: str) -> str:
     detector = cv2.QRCodeDetector()
     conteudo, _, _ = detector.detectAndDecode(img)
     return conteudo
-
-if __name__ == '__main__':
-    print(Path(NamedTemporaryFile(suffix='.png').name))

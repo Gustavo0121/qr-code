@@ -4,8 +4,9 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import gen_qr, read_qr, qrcodes
+from application.controllers.actions import gen_qr, read_qr
 from application.controllers.appbar import AppBar
+
 
 class Main(ft.View):
     """Main page."""
@@ -50,7 +51,7 @@ class Main(ft.View):
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
                             ),
-                            on_click=lambda e: self.dlgmodal(e, True),
+                            on_click=lambda e: self.dlgmodal(e, modal=True),
                         ),
                         ft.TextButton(
                             'Ler QR Code',
@@ -75,46 +76,62 @@ class Main(ft.View):
     def files_result(self, event: ft.FilePickerResultEvent) -> None:
         """Pick file result."""
         self.conteudo = read_qr(event, event.files[0].path)
-        self.dlgmodal(event, False)
+        self.dlgmodal(event, modal=False)
 
-    def dlgmodal(self, event: ft.ControlEvent, modal: bool) -> None:
+    def dlgmodal(self, event: ft.ControlEvent, *, modal: bool) -> None:
         """Generate a QR Code."""
-        self.dlg_modal = ft.AlertDialog(
-            bgcolor='#0A6199',
-            modal=True,
-            title=ft.Text('Gerador de QR Code', color='black', weight=ft.FontWeight.BOLD),
-            content=ft.Column(
-                controls=[
-                    ft.TextField(
-                        label='Escreva a mensagem do QR Code',
-                        text_style=ft.TextStyle(color='black', weight=ft.FontWeight.W_500)
+        self.dlg_modal = (
+            ft.AlertDialog(
+                bgcolor='#0A6199',
+                modal=True,
+                title=ft.Text(
+                    'Gerador de QR Code',
+                    color='black',
+                    weight=ft.FontWeight.BOLD,
+                ),
+                content=ft.Column(
+                    controls=[
+                        ft.TextField(
+                            label='Escreva a mensagem do QR Code',
+                            text_style=ft.TextStyle(
+                                color='black',
+                                weight=ft.FontWeight.W_500,
+                            ),
+                        ),
+                    ],
+                ),
+                actions=[
+                    ft.TextButton(
+                        'Cancelar',
+                        on_click=lambda e: e.page.close(self.dlg_modal),
+                    ),
+                    ft.TextButton(
+                        'Gerar',
+                        on_click=lambda e: gen_qr(
+                            e,
+                            self.dlg_modal.content.controls[0].value,
+                            self.dlg_modal,
+                        ),
                     ),
                 ],
-            ),
-            actions=[
-                ft.TextButton(
-                    'Cancelar',
-                    on_click=lambda e: e.page.close(self.dlg_modal),
+                actions_alignment=ft.MainAxisAlignment.END,
+                on_dismiss=lambda e: e.page.add(
+                    ft.Text('Modal dialog dismissed'),
                 ),
-                ft.TextButton(
-                    'Gerar',
-                    on_click=lambda e: gen_qr(
-                        e,
-                        self.dlg_modal.content.controls[0].value,
-                        self.dlg_modal,
-                    ),
-                ),
-            ],
-            actions_alignment=ft.MainAxisAlignment.END,
-            on_dismiss=lambda e: e.page.add(
-                ft.Text('Modal dialog dismissed'),
-            ),
-        ) if modal else ft.AlertDialog(
-            title=ft.Text('Conteúdo do QR Code', color='black', weight=ft.FontWeight.BOLD),
-            content=ft.Text(self.conteudo, color='black', size=20),
-            bgcolor='#0A6199',
             )
+            if modal
+            else ft.AlertDialog(
+                title=ft.Text(
+                    'Conteúdo do QR Code',
+                    color='black',
+                    weight=ft.FontWeight.BOLD,
+                ),
+                content=ft.Text(self.conteudo, color='black', size=20),
+                bgcolor='#0A6199',
+            )
+        )
         event.page.open(self.dlg_modal)
+
 
 def main_view(e: ft.ControlEvent) -> ft.Control:
     """Main view."""

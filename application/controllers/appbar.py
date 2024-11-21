@@ -2,6 +2,7 @@
 
 import flet as ft
 
+
 class AppBar(ft.AppBar):
     """Appbar component."""
 
@@ -24,9 +25,20 @@ class AppBar(ft.AppBar):
         self.toolbar_height = 60
         self.bgcolor = '#10A7E3'
 
-        self.leading = ft.Icon(ft.icons.QR_CODE_2_OUTLINED, size=40, color='black')
+        self.leading = ft.Icon(
+            ft.icons.QR_CODE_2_OUTLINED,
+            size=40,
+            color='black',
+        )
 
-        self.actions = [ft.IconButton(icon=ft.icons.CLOSE, icon_color='#A40000', icon_size=40,on_click=self.close_app)]
+        self.actions = [
+            ft.IconButton(
+                icon=ft.icons.CLOSE,
+                icon_color='#A40000',
+                icon_size=40,
+                on_click=self.close_app,
+            ),
+        ]
 
     def close_app(self, event: ft.ControlEvent) -> None:
         """Close app."""
