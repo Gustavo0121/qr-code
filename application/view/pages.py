@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import gen_qr, read_qr
+from application.controllers.actions import gen_qr, read_qr, qrcodes
 from application.controllers.appbar import AppBar
 
 class Main(ft.View):
@@ -19,7 +19,7 @@ class Main(ft.View):
         self.bgcolor = '#074166'
         self.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.vertical_alignment = ft.MainAxisAlignment.CENTER
-        self.dlg_modal = ft.AlertDialog()
+        self.dlg_modal = ft.AlertDialog
         self.file_picker = ft.FilePicker(on_result=self.files_result)
         self.events.page.overlay.append(self.file_picker)
         self.conteudo = ''
@@ -50,8 +50,8 @@ class Main(ft.View):
                     height=200,
                 ),
                 bgcolor='#0A6199',
-                height=550,
-                width=400,
+                height=300,
+                width=250,
                 alignment=ft.alignment.center,
             ),
         ]
