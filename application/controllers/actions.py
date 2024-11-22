@@ -6,6 +6,7 @@ from tempfile import NamedTemporaryFile
 
 import cv2
 import flet as ft
+from flet_toast import flet_toast
 import qrcode
 
 qrcodes: list = []
@@ -97,6 +98,7 @@ def download(
     logging.debug(event)
     img.save(Path.home().joinpath('Downloads', 'teste.png').as_posix())
     event.page.close(dlg)
+    flet_toast.sucess(event.page, 'Download bem sucedido', 'top_right')
 
 
 def read_qr(event: ft.ControlEvent, file: str) -> str:
