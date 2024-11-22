@@ -24,7 +24,14 @@ colors = {
     'Preto': 'black',
 }
 
-def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control, bkgcolor: str, qrcolor: str) -> None:
+
+def gen_qr(
+    event: ft.ControlEvent,
+    msg: str,
+    dlg: ft.Control,
+    bkgcolor: str,
+    qrcolor: str,
+) -> None:
     """Generate QR Code."""
     logging.debug(event)
     qrcodes.append(Path(NamedTemporaryFile(suffix='.png').name))  # noqa: SIM115
@@ -36,7 +43,10 @@ def gen_qr(event: ft.ControlEvent, msg: str, dlg: ft.Control, bkgcolor: str, qrc
     )
     qr.add_data(msg)
     qr.make(fit=True)
-    img = qr.make_image(fill_color=colors[qrcolor], back_color=colors[bkgcolor])
+    img = qr.make_image(
+        fill_color=colors[qrcolor],
+        back_color=colors[bkgcolor],
+    )
     img.save(qrcodes[-1].as_posix())
     dlg_qr: ft.AlertDialog = ft.AlertDialog(
         title=ft.Text('QR Code gerado', weight=ft.FontWeight.BOLD),
