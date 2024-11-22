@@ -1,12 +1,15 @@
 """Actions."""
 
 import logging
+from datetime import datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
 import cv2
 import flet as ft
 import qrcode
+from flet_toast import flet_toast
+from pytz import timezone
 
 qrcodes: list = []
 
@@ -66,6 +69,31 @@ def gen_qr(
                         ),
                     ],
                 ),
+            ]
+            if bkgcolor == 'Branco' and qrcolor == 'Preto'
+            else [
+                ft.Image(qrcodes[-1].as_posix()),
+                ft.Text(
+                    'Os QR Codes com cores alteradas estão'
+                    ' sujeitos à dificuldade ou até mesmo à'
+                    ' ilegibilidade da mensagem',
+                    color='#76CEF2',
+                    weight=ft.FontWeight.BOLD,
+                    size=20,
+                    width=350,
+                ),
+                ft.Row(
+                    controls=[
+                        ft.TextButton(
+                            'Close',
+                            on_click=lambda e: e.page.close(dlg_qr),
+                        ),
+                        ft.TextButton(
+                            'Download',
+                            on_click=lambda e: download(e, img, dlg_qr),
+                        ),
+                    ],
+                ),
             ],
         ),
     )
@@ -80,8 +108,14 @@ def download(
 ) -> None:
     """Download image."""
     logging.debug(event)
-    img.save(Path.home().joinpath('Downloads', 'teste.png').as_posix())
+    now = datetime.now(tz=timezone('America/Sao_Paulo'))
+    img.save(
+        Path.home()
+        .joinpath('Downloads', f'QR_{now.strftime("%Y%m%d%H%M%S")}.png')
+        .as_posix(),
+    )
     event.page.close(dlg)
+    flet_toast.sucess(event.page, 'Download bem sucedido', 'top_right')
 
 
 def read_qr(event: ft.ControlEvent, file: str) -> str:

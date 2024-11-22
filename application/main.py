@@ -27,6 +27,7 @@ def main(page: ft.Page) -> None:
     page.theme_mode = ft.ThemeMode.DARK
     page.window.height = 800
     page.window.width = 1200
+    page.window.full_screen = True
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
