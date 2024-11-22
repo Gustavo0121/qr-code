@@ -3,6 +3,7 @@
 import logging
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from datetime import datetime
 
 import cv2
 import flet as ft
@@ -96,7 +97,8 @@ def download(
 ) -> None:
     """Download image."""
     logging.debug(event)
-    img.save(Path.home().joinpath('Downloads', 'teste.png').as_posix())
+    now = datetime.now()
+    img.save(Path.home().joinpath('Downloads', f'QR_{now.strftime("%Y%m%d%H%M%S")}.png').as_posix())
     event.page.close(dlg)
     flet_toast.sucess(event.page, 'Download bem sucedido', 'top_right')
 
