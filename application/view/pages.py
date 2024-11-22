@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import gen_qr, read_qr
+from application.controllers.actions import gen_qr, read_qr, colors
 from application.controllers.appbar import AppBar
 
 
@@ -99,6 +99,20 @@ class Main(ft.View):
                                 weight=ft.FontWeight.W_500,
                             ),
                         ),
+                        ft.Dropdown(
+                            label='Cor de fundo',
+                            value='Branco',
+                            options=[ft.dropdown.Option(color) for color in colors.keys()],
+                            bgcolor='#0A6199',
+                            color='black',
+                        ),
+                        ft.Dropdown(
+                            label='Cor do QR Code',
+                            value='Preto',
+                            options=[ft.dropdown.Option(color) for color in colors.keys()],
+                            bgcolor='#0A6199',
+                            color='black',
+                        ),
                     ],
                 ),
                 actions=[
@@ -112,6 +126,8 @@ class Main(ft.View):
                             e,
                             self.dlg_modal.content.controls[0].value,
                             self.dlg_modal,
+                            self.dlg_modal.content.controls[1].value,
+                            self.dlg_modal.content.controls[2].value,
                         ),
                     ),
                 ],
