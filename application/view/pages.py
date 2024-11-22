@@ -70,6 +70,7 @@ class Main(ft.View):
                 height=300,
                 width=250,
                 alignment=ft.alignment.center,
+                border_radius=ft.border_radius.all(20)
             ),
         ]
 
