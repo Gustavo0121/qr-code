@@ -126,7 +126,7 @@ class Main(ft.View):
                     color='black',
                     weight=ft.FontWeight.BOLD,
                 ),
-                content=ft.Text(self.conteudo, color='black', size=20),
+                content=ft.Text(self.conteudo, color='black', size=20, selectable=True),
                 bgcolor='#0A6199',
             )
         )
