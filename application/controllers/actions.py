@@ -66,6 +66,21 @@ def gen_qr(
                         ),
                     ],
                 ),
+            ] if bkgcolor == 'Branco' and qrcolor == 'Preto' else[
+                ft.Image(qrcodes[-1].as_posix()),
+                ft.Text('Os QR Codes com cores alteradas estão sujeitos à dificuldade ou até mesmo à ilegibilidade da mensagem', color='#76CEF2', weight=ft.FontWeight.BOLD, size=20, width=350),
+                ft.Row(
+                    controls=[
+                        ft.TextButton(
+                            'Close',
+                            on_click=lambda e: e.page.close(dlg_qr),
+                        ),
+                        ft.TextButton(
+                            'Download',
+                            on_click=lambda e: download(e, img, dlg_qr),
+                        ),
+                    ],
+                ),
             ],
         ),
     )
