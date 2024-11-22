@@ -429,6 +429,17 @@ httpx = ">=0,<1"
 oauthlib = ">=3.2.2,<4.0.0"
 
 [[package]]
+name = "flet-toast"
+version = "0.5.0"
+description = "Cria interface para exibir notificações na tela"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "flet_toast-0.5.0-py3-none-any.whl", hash = "sha256:f44f3c401e10f4e7d8fcb093f802076c168a3cd06105c2591ae06af5e9d80dd7"},
+    {file = "flet_toast-0.5.0.tar.gz", hash = "sha256:b94f9fa634a51752a2e087a242f6620ff136c6ba04e195bd3a2339c23e84a02a"},
+]
+
+[[package]]
 name = "ghp-import"
 version = "2.1.0"
 description = "Copy your docs directly to the gh-pages branch."
@@ -2000,4 +2011,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.14"
-content-hash = "bfe2499a69be4599a39da9077bf697d55b8c4fbcc20884298363606b8a82393f"
+content-hash = "629dd996e52929624b6b653795012169230a231836cb0a1ca7f613ea33938f4e"
