@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import gen_qr, read_qr
+from application.controllers.actions import colors, gen_qr, read_qr
 from application.controllers.appbar import AppBar
 
 
@@ -70,6 +70,7 @@ class Main(ft.View):
                 height=300,
                 width=250,
                 alignment=ft.alignment.center,
+                border_radius=ft.border_radius.all(20),
             ),
         ]
 
@@ -98,6 +99,24 @@ class Main(ft.View):
                                 weight=ft.FontWeight.W_500,
                             ),
                         ),
+                        ft.Dropdown(
+                            label='Cor de fundo',
+                            value='Branco',
+                            options=[
+                                ft.dropdown.Option(color) for color in colors
+                            ],
+                            bgcolor='#0A6199',
+                            color='black',
+                        ),
+                        ft.Dropdown(
+                            label='Cor do QR Code',
+                            value='Preto',
+                            options=[
+                                ft.dropdown.Option(color) for color in colors
+                            ],
+                            bgcolor='#0A6199',
+                            color='black',
+                        ),
                     ],
                 ),
                 actions=[
@@ -111,6 +130,8 @@ class Main(ft.View):
                             e,
                             self.dlg_modal.content.controls[0].value,
                             self.dlg_modal,
+                            self.dlg_modal.content.controls[1].value,
+                            self.dlg_modal.content.controls[2].value,
                         ),
                     ),
                 ],
@@ -126,7 +147,12 @@ class Main(ft.View):
                     color='black',
                     weight=ft.FontWeight.BOLD,
                 ),
-                content=ft.Text(self.conteudo, color='black', size=20),
+                content=ft.Text(
+                    self.conteudo,
+                    color='black',
+                    size=20,
+                    selectable=True,
+                ),
                 bgcolor='#0A6199',
             )
         )
