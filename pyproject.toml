@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "qr-code"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["Gustavo0121 <gus0512san@gmail.com>"]
 readme = "README.md"
@@ -12,12 +12,15 @@ flet = "^0.24.1"
 qrcode = "7.4.2"
 opencv-python = "^4.10.0.84"
 pillow = "^11.0.0"
+flet-toast = "^0.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
 pytest-cov = "^6.0.0"
 taskipy = "^1.14.0"
+pyinstaller = "^6.11.1"
+pytz = "^2024.2"
 
 
 [tool.poetry.group.lint.dependencies]
