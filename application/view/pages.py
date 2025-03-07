@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import colors, gen_qr, read_qr
+from application.controllers.actions import colors, gen_qr, read_qr, scan_qr
 from application.controllers.appbar import AppBar
 
 
@@ -61,6 +61,14 @@ class Main(ft.View):
                             ),
                             on_click=lambda _: self.file_picker.pick_files(),
                         ),
+                        ft.TextButton(
+                            'Scanear QR Code',
+                            style=ft.ButtonStyle(
+                                bgcolor='#0E8BDB',
+                                shape=ft.RoundedRectangleBorder(radius=5),
+                            ),
+                            on_click=lambda e: self.scan_result(e),
+                        ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -79,8 +87,13 @@ class Main(ft.View):
         self.conteudo = read_qr(event, event.files[0].path)
         self.dlgmodal(event, modal=False)
 
+    def scan_result(self, event: ft.ControlEvent) -> None:
+        """Show result for scan."""
+        self.conteudo = scan_qr(event)
+        self.dlgmodal(event, modal=False)
+
     def dlgmodal(self, event: ft.ControlEvent, *, modal: bool) -> None:
-        """Generate a QR Code."""
+        """Dialogo modal."""
         self.dlg_modal = (
             ft.AlertDialog(
                 bgcolor='#0A6199',
