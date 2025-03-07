@@ -10,6 +10,7 @@ import flet as ft
 import qrcode
 from flet_toast import flet_toast
 from pytz import timezone
+from pyzbar.pyzbar import decode
 
 qrcodes: list = []
 
@@ -125,3 +126,35 @@ def read_qr(event: ft.ControlEvent, file: str) -> str:
     detector = cv2.QRCodeDetector()
     conteudo, _, _ = detector.detectAndDecode(img)
     return conteudo
+
+
+def scan_qr(event: ft.ControlEvent) -> str:
+    """Scan QRCode."""
+    logging.debug(event)
+    cap = cv2.VideoCapture(0)
+
+    if not cap.isOpened():
+        print("Erro ao abrir a webcam")
+        exit()
+
+    print("Aguardando QR code... Pressione 'q' para sair")
+
+    while True:
+        ret, frame = cap.read()
+
+        if not ret:
+            print("Não foi possível receber o frame")
+            break
+
+        cv2.imshow('Scanner de QR Code', frame)
+
+        qr_codes = decode(frame)
+        if qr_codes:
+            break
+
+        if cv2.waitKey(1) == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+    return qr_codes[0].data.decode('utf-8')
