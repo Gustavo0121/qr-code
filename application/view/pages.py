@@ -54,7 +54,7 @@ class Main(ft.View):
                             on_click=lambda e: self.dlgmodal(e, modal=True),
                         ),
                         ft.TextButton(
-                            'Ler QR Code',
+                            'Ler arquivo QR Code',
                             style=ft.ButtonStyle(
                                 bgcolor='#0E8BDB',
                                 shape=ft.RoundedRectangleBorder(radius=5),
