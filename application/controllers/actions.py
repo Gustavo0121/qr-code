@@ -271,16 +271,14 @@ def scan_qr(event: ft.ControlEvent) -> str:
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
-        print('Erro ao abrir a webcam')  #noqa: T201
+        flet_toast.error(event.page, 'Erro ao abrir a câmera', 'top_right')
         sys.exit()
-
-    print("Aguardando QR code... Pressione 'q' para sair")  #noqa: T201
 
     while True:
         ret, frame = cap.read()
 
         if not ret:
-            print('Não foi possível receber o frame')  #noqa: T201
+            flet_toast.error(event.page, 'Não foi possível ler o QR code', 'top_right')
             break
 
         cv2.imshow('Scanner de QR Code', frame)
