@@ -1,6 +1,7 @@
 """Actions."""
 
 import logging
+import sys
 from datetime import datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -13,20 +14,6 @@ from pytz import timezone
 from pyzbar.pyzbar import decode
 
 qrcodes: list = []
-
-# colors = {
-#     'Azul': 'blue',
-#     'Verde': 'green',
-#     'Amarelo': 'yellow',
-#     'Roxo': 'purple',
-#     'Rosa': 'pink',
-#     'Vermelho': 'red',
-#     'Laranja': 'orange',
-#     'Marrom': 'brown',
-#     'Cinza': 'gray',
-#     'Branco': 'white',
-#     'Preto': 'black',
-# }
 
 colors = {
     'teste0': 'aliceblue',
@@ -284,16 +271,16 @@ def scan_qr(event: ft.ControlEvent) -> str:
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
-        print("Erro ao abrir a webcam")
-        exit()
+        print('Erro ao abrir a webcam')  #noqa: T201
+        sys.exit()
 
-    print("Aguardando QR code... Pressione 'q' para sair")
+    print("Aguardando QR code... Pressione 'q' para sair")  #noqa: T201
 
     while True:
         ret, frame = cap.read()
 
         if not ret:
-            print("Não foi possível receber o frame")
+            print('Não foi possível receber o frame')  #noqa: T201
             break
 
         cv2.imshow('Scanner de QR Code', frame)
