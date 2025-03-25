@@ -238,19 +238,43 @@ def gen_qr(
     event.page.open(dlg_qr)
     event.page.close(dlg)
 
+
 def example_color(
     event: ft.ControlEvent,
     dlg: ft.Control,
+    *,
     bg: bool,
 ) -> None:
     """Generate QR Code."""
     logging.debug(event)
     dlg_colors: ft.AlertDialog = ft.AlertDialog(
-        title=ft.Text('Exemplo da cor', weight=ft.FontWeight.BOLD, color='black'),
+        title=ft.Text(
+            'Exemplo da cor',
+            weight=ft.FontWeight.BOLD,
+            color='black',
+        ),
         bgcolor='#074166',
         content=ft.Column(
             controls=[
-                ft.Image(src=Path(__file__).parents[2].joinpath('qrcolors', 'back', f'{colors.index(dlg.content.controls[1].controls[0].value)}.png').as_posix() if bg else Path(__file__).parents[2].joinpath('qrcolors', 'front', f'{colors.index(dlg.content.controls[2].controls[0].value)}.png').as_posix()),
+                ft.Image(
+                    src=Path(__file__)
+                    .parents[2]
+                    .joinpath(
+                        'qrcolors',
+                        'back',
+                        f'{colors.index(dlg.content.controls[1].controls[0].value)}.png',
+                    )
+                    .as_posix()
+                    if bg
+                    else Path(__file__)
+                    .parents[2]
+                    .joinpath(
+                        'qrcolors',
+                        'front',
+                        f'{colors.index(dlg.content.controls[2].controls[0].value)}.png',
+                    )
+                    .as_posix(),
+                ),
                 ft.Row(
                     controls=[
                         ft.TextButton(
@@ -263,6 +287,7 @@ def example_color(
         ),
     )
     event.page.open(dlg_colors)
+
 
 def download(
     event: ft.ControlEvent,
@@ -303,7 +328,11 @@ def scan_qr(event: ft.ControlEvent) -> str:
         ret, frame = cap.read()
 
         if not ret:
-            flet_toast.error(event.page, 'Não foi possível ler o QR code', 'top_right')
+            flet_toast.error(
+                event.page,
+                'Não foi possível ler o QR code',
+                'top_right',
+            )
             break
 
         cv2.imshow('Scanner de QR Code', frame)

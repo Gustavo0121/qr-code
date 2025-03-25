@@ -4,7 +4,13 @@ import logging
 from pathlib import Path
 
 import flet as ft
-from application.controllers.actions import colors, gen_qr, read_qr, scan_qr, example_color
+from application.controllers.actions import (
+    colors,
+    example_color,
+    gen_qr,
+    read_qr,
+    scan_qr,
+)
 from application.controllers.appbar import AppBar
 
 
@@ -118,13 +124,22 @@ class Main(ft.View):
                                     label='Cor de fundo',
                                     value='white',
                                     options=[
-                                        ft.dropdown.Option(color) for color in colors
+                                        ft.dropdown.Option(color)
+                                        for color in colors
                                     ],
                                     bgcolor='#0A6199',
                                     color='black',
                                     width=200,
                                 ),
-                                ft.IconButton(icon=ft.icons.INFO, icon_size=20, on_click=lambda e: example_color(e, self.dlg_modal, bg=True)),
+                                ft.IconButton(
+                                    icon=ft.icons.INFO,
+                                    icon_size=20,
+                                    on_click=lambda e: example_color(
+                                        e,
+                                        self.dlg_modal,
+                                        bg=True,
+                                    ),
+                                ),
                             ],
                         ),
                         ft.Row(
@@ -133,13 +148,22 @@ class Main(ft.View):
                                     label='Cor do QR Code',
                                     value='black',
                                     options=[
-                                        ft.dropdown.Option(color) for color in colors
+                                        ft.dropdown.Option(color)
+                                        for color in colors
                                     ],
                                     bgcolor='#0A6199',
                                     color='black',
                                     width=200,
                                 ),
-                                ft.IconButton(icon=ft.icons.INFO, icon_size=20, on_click=lambda e: example_color(e, self.dlg_modal, bg=False)),
+                                ft.IconButton(
+                                    icon=ft.icons.INFO,
+                                    icon_size=20,
+                                    on_click=lambda e: example_color(
+                                        e,
+                                        self.dlg_modal,
+                                        bg=False,
+                                    ),
+                                ),
                             ],
                         ),
                     ],
@@ -155,8 +179,12 @@ class Main(ft.View):
                             e,
                             self.dlg_modal.content.controls[0].value,
                             self.dlg_modal,
-                            self.dlg_modal.content.controls[1].controls[0].value,
-                            self.dlg_modal.content.controls[2].controls[0].value,
+                            self.dlg_modal.content.controls[1]
+                            .controls[0]
+                            .value,
+                            self.dlg_modal.content.controls[2]
+                            .controls[0]
+                            .value,
                         ),
                     ),
                 ],
