@@ -124,7 +124,7 @@ class Main(ft.View):
                                     color='black',
                                     width=200,
                                 ),
-                                ft.IconButton(icon=ft.icons.INFO, icon_size=20),
+                                ft.IconButton(icon=ft.icons.INFO, icon_size=20, on_click=lambda e: example_color(e, self.dlg_modal, bg=True)),
                             ],
                         ),
                         ft.Row(
@@ -139,7 +139,7 @@ class Main(ft.View):
                                     color='black',
                                     width=200,
                                 ),
-                                ft.IconButton(icon=ft.icons.INFO, icon_size=20, on_click=lambda e: example_color(e, self.dlg_modal)),
+                                ft.IconButton(icon=ft.icons.INFO, icon_size=20, on_click=lambda e: example_color(e, self.dlg_modal, bg=False)),
                             ],
                         ),
                     ],
